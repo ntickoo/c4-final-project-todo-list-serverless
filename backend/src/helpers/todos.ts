@@ -12,6 +12,9 @@ const todosAccess = new TodosAccess()
 const logger = createLogger('TodosAccess')
 
 export class TodoService {
+    async deleteTodoItem(userId: string, todoId: string) {
+      await todosAccess.deleteTodo(userId,todoId)
+    }
     
     async getAllTodos(userId: string) : Promise<TodoItem[]> {
         logger.info('TodoService - getAllTodos for userid', userId)
