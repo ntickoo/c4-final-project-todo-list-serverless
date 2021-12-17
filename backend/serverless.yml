@@ -103,7 +103,6 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:UpdateItem
-          - dynamodb:Query
           - dynamodb:GetItem
         Resource: !GetAtt TodosTable.Arn
 
@@ -123,7 +122,6 @@ functions:
         Action:
           - dynamodb:DeleteItem
           - dynamodb:GetItem
-          - dynamodb:Query
         Resource: !GetAtt TodosTable.Arn
 
   # TODO: Configure this function [Done verify if we need both GET and PUT permission]
