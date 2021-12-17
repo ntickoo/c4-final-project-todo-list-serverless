@@ -58,7 +58,11 @@ export class EditTodo extends React.PureComponent<
 
       alert('File was uploaded!')
     } catch (e) {
-      alert('Could not upload a file: ' + e.message)
+      if(e instanceof Error) {
+        alert('Could not upload a file: ' + e.message)
+      }else {
+        alert('Not able to upload a file: ')
+      }
     } finally {
       this.setUploadState(UploadState.NoUpload)
     }
