@@ -88,6 +88,24 @@ export class TodosAccess {
   
       await this.docClient.update(params).promise()
   }
+
+  async updateImageUrl(todoId: string, userId: string, imageUrl: string) {
+    logger.info(`Update todo ${todoId} with attachment url ${imageUrl} for userId ${userId}`)
+    var params = {
+          TableName: this.todosTable,
+          Key: {
+            "userId": userId,
+            "todoId": todoId
+          },
+          UpdateExpression: "set attachmentUrl = :url",
+          ExpressionAttributeValues:{
+              ":url":  imageUrl
+          },
+          ReturnValues:"NONE"
+      };
+  
+      await this.docClient.update(params).promise()
+  }
 }
 
 function createDynamoDBClient() {

@@ -1,17 +1,17 @@
 import { TodosAccess } from './todosAcess'
-import { AttachmentUtils } from './attachmentUtils';
 import { TodoItem } from '../models/TodoItem'
 import { CreateTodoRequest } from '../requests/CreateTodoRequest'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import { createLogger } from '../utils/logger'
 import * as uuid from 'uuid'
-import * as createError from 'http-errors'
 
 // TODO: Implement businessLogic
 const todosAccess = new TodosAccess()
 const logger = createLogger('TodosAccess')
+const bucketName = process.env.ATTACHMENT_S3_BUCKET;
 
 export class TodoService {
+
     async deleteTodoItem(userId: string, todoId: string) {
       await todosAccess.deleteTodo(userId,todoId)
     }
@@ -41,8 +41,12 @@ export class TodoService {
     }
     async updateTodoItem(userId: string, todoId: string, updatedTodo: UpdateTodoRequest){
         logger.info(`TodoService - updateTodoItem for ${userId}', updatedTodo dto ${updatedTodo}, todoId ${todoId}`)
-
         todosAccess.updateTodo(userId, todoId, updatedTodo)
+    }
+
+    async updateImageUrlForTodoItem(todoId: string, userId: string, imageId: string){
+        const imageUrl = `https://${bucketName}.s3.amazonaws.com/${imageId}`
+        await todosAccess.updateImageUrl(todoId, userId, imageUrl)
     }
 }
 
