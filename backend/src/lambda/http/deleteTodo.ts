@@ -22,7 +22,8 @@ export const handler = middy(
     const userId                          = getUserId(event)
     logger.info(`Processing delete todo request for ${userId} for todo id ${todoId}`)
 
-    if(!todoSerice.todoItemExistsForUser(todoId, userId)) {
+    const found:boolean = await todoSerice.todoItemExistsForUser(todoId, userId)
+    if(!found) {
       logger.info(`No todo id ${todoId} exists for ${userId}. Rejecting request`)
       return {
         statusCode: 404,

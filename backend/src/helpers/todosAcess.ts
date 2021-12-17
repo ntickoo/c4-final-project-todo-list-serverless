@@ -27,7 +27,6 @@ export class TodosAccess {
     })
     .promise();
 
-    logger.info(`Item found ${result}`)
     return result.Item as TodoItem
   }
 

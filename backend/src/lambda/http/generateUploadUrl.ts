@@ -23,7 +23,9 @@ export const handler = middy(
     const userId  = getUserId(event)
 
     logger.info(`Generating signed url for todo item ${todoId}, for user ${userId}`)
-    if(!todoSerice.todoItemExistsForUser(todoId, userId)) {
+    const found:boolean = await todoSerice.todoItemExistsForUser(todoId, userId)
+
+    if(!found) {
       logger.info(`No todo item ${todoId} exists for user ${userId}. Rejecting request`)
       return {
         statusCode: 404,

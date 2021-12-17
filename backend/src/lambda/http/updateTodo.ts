@@ -21,7 +21,11 @@ export const handler = middy(
     const updatedTodo: UpdateTodoRequest  = JSON.parse(event.body)
     const userId                          = getUserId(event)
     // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
-    if(!todoSerice.todoItemExistsForUser(todoId, userId)) {
+    const found:boolean = await todoSerice.todoItemExistsForUser(todoId, userId)
+
+    if(!found) {
+      logger.info(`No todo item ${todoId} exists for user ${userId}. Rejecting update request`)
+
       return {
         statusCode: 404,
         body: JSON.stringify({
