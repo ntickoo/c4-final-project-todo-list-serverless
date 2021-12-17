@@ -15,7 +15,7 @@ const todoSerice = new TodoService()
 
 export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
-  logger.info('Handing event', event)
+  logger.info('Create Todo Handing event', event)
 
   const newTodo: CreateTodoRequest = JSON.parse(event.body)
   const userId = getUserId(event)
