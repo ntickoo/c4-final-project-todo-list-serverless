@@ -18,7 +18,7 @@ export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGat
     logger.info('Get All Todos - Processing event: ', event)
     const userId = getUserId(event)
     const todos = await todoSerice.getAllTodos(userId)
-
+    logger.info(`Todos fetched successfully for userId ${userId}`)
     return {
       statusCode: 200,
       body: JSON.stringify({

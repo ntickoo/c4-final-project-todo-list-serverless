@@ -17,11 +17,14 @@ export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
 
-    logger.info('Generate Upload Signed url for todo item - Processing event: ', event)
+    logger.info('Signed URL TODO. Processing event: ', event)
 
     const todoId  = event.pathParameters.todoId
     const userId  = getUserId(event)
-    if(!todoSerice.getTodoItem(todoId, userId)) {
+
+    logger.info(`Generating signed url for todo item ${todoId}, for user ${userId}`)
+    if(!todoSerice.todoItemExistsForUser(todoId, userId)) {
+      logger.info(`No todo item ${todoId} exists for user ${userId}. Rejecting request`)
       return {
         statusCode: 404,
         body: JSON.stringify({

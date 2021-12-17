@@ -20,8 +20,10 @@ export const handler = middy(
 
     const todoId                          = event.pathParameters.todoId
     const userId                          = getUserId(event)
+    logger.info(`Processing delete todo request for ${userId} for todo id ${todoId}`)
 
-    if(!todoSerice.getTodoItem(todoId, userId)) {
+    if(!todoSerice.todoItemExistsForUser(todoId, userId)) {
+      logger.info(`No todo id ${todoId} exists for ${userId}. Rejecting request`)
       return {
         statusCode: 404,
         body: JSON.stringify({
@@ -31,6 +33,7 @@ export const handler = middy(
     }
     
     await todoSerice.deleteTodoItem(userId, todoId)
+    logger.info(`Todo id ${todoId}  for ${userId} deleted successfully.`)
     return {
       statusCode: 200,
       body: ''

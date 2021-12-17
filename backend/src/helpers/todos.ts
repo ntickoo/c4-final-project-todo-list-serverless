@@ -35,13 +35,13 @@ export class TodoService {
         }
         return todosAccess.createTodo(todoItem)
     }
-    async getTodoItem(todoId: string, userId: string): Promise<boolean> {
+    async todoItemExistsForUser(todoId: string, userId: string): Promise<boolean> {
         const todoItem:TodoItem = await todosAccess.getTodoItem(userId, todoId)
         return !!todoItem
     }
     async updateTodoItem(userId: string, todoId: string, updatedTodo: UpdateTodoRequest){
         logger.info(`TodoService - updateTodoItem for ${userId}', updatedTodo dto ${updatedTodo}, todoId ${todoId}`)
-        todosAccess.updateTodo(userId, todoId, updatedTodo)
+        await todosAccess.updateTodo(userId, todoId, updatedTodo)
     }
 
     async updateImageUrlForTodoItem(todoId: string, userId: string, imageId: string){
