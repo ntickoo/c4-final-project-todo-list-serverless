@@ -31,7 +31,7 @@ export class TodoService {
             dueDate: todoDto.dueDate,
             name: todoDto.name,
             userId: userId,
-            todoId: todoId,
+            todoId: todoId
         }
         return todosAccess.createTodo(todoItem)
     }
