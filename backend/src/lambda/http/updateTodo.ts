@@ -15,7 +15,7 @@ const todoSerice = new TodoService()
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    logger.info('update todos - Processing event: ', event)
+    logger.info(`update todos - Processing event: ${event}`)
 
     const todoId                          = event.pathParameters.todoId
     const updatedTodo: UpdateTodoRequest  = JSON.parse(event.body)

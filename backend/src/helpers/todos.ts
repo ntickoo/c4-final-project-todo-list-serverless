@@ -17,7 +17,7 @@ export class TodoService {
     }
     
     async getAllTodos(userId: string) : Promise<TodoItem[]> {
-        logger.info('TodoService - getAllTodos for userid', userId)
+        logger.info(`TodoService - getAllTodos for userid ${userId}`)
         return todosAccess.getAllTodos(userId)
     }
 

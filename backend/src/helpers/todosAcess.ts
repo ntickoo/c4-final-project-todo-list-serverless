@@ -15,7 +15,7 @@ export class TodosAccess {
   ) {}
 
   async getTodoItem(userId:string, todoId:string): Promise<TodoItem> {
-    logger.info('Getting TodoItem for todoid', todoId)
+    logger.info(`Getting TodoItem for todoid ${todoId} for user id ${userId}`)
 
     const result = await this.docClient
     .get({
@@ -27,11 +27,12 @@ export class TodosAccess {
     })
     .promise();
 
+    logger.info(`Item found ${result}`)
     return result.Item as TodoItem
   }
 
   async getAllTodos(userId: string): Promise<TodoItem[]> {
-    logger.info('Getting all TodoItems for userid', userId)
+    logger.info(`Getting all TodoItems for userid' ${userId}`)
 
     const result = await this.docClient
     .query({
@@ -46,7 +47,7 @@ export class TodosAccess {
   }
 
   async createTodo(todoItem: TodoItem): Promise<TodoItem> {
-    logger.info('Create todo item - ', todoItem)
+    logger.info(`Create todo item - ', ${todoItem}`)
     await this.docClient.put({
       TableName: this.todosTable,
       Item: todoItem
@@ -56,7 +57,7 @@ export class TodosAccess {
   }
 
   async deleteTodo(userId: string, todoId: string) {
-    logger.info('Delete todo item - ', userId, todoId)
+    logger.info(`Delete todo item - ${userId}, todoid ${todoId}`)
     await this.docClient
     .delete({
       TableName: this.todosTable,

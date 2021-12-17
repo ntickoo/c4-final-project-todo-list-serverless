@@ -15,7 +15,7 @@ const todoSerice = new TodoService()
 // TODO: Get all TODO items for a current user
 export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     // Write your code here
-    logger.info('Get All Todos - Processing event: ', event)
+    logger.info(`Get All Todos - Processing event: ${event}`)
     const userId = getUserId(event)
     const todos = await todoSerice.getAllTodos(userId)
     logger.info(`Todos fetched successfully for userId ${userId}`)
