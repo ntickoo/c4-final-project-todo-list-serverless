@@ -12,6 +12,7 @@ const todosAccess = new TodosAccess()
 const logger = createLogger('TodosAccess')
 
 export class TodoService {
+    
     async getAllTodos(userId: string) : Promise<TodoItem[]> {
         logger.info('TodoService - getAllTodos for userid', userId)
         return todosAccess.getAllTodos(userId)
@@ -30,6 +31,15 @@ export class TodoService {
             todoId: todoId,
         }
         return todosAccess.createTodo(todoItem)
+    }
+    async getTodoItem(todoId: string, userId: string): Promise<boolean> {
+        const todoItem:TodoItem = await todosAccess.getTodoItem(userId, todoId)
+        return !!todoItem
+    }
+    async updateTodoItem(userId: string, todoId: string, updatedTodo: UpdateTodoRequest){
+        logger.info(`TodoService - updateTodoItem for ${userId}', updatedTodo dto ${updatedTodo}, todoId ${todoId}`)
+
+        todosAccess.updateTodo(userId, todoId, updatedTodo)
     }
 }
 

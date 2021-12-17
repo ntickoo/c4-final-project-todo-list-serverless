@@ -4,6 +4,7 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import { createLogger } from '../utils/logger'
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate'
+import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 
 const XAWS = AWSXRay.captureAWS(AWS)
 
@@ -13,6 +14,22 @@ export class TodosAccess {
     private readonly docClient: DocumentClient = createDynamoDBClient(),
     private readonly todosTable = process.env.TODOS_TABLE,
   ) {}
+
+  async getTodoItem(userId:string, todoId:string): Promise<TodoItem> {
+    logger.info('Getting TodoItem for todoid', todoId)
+
+    const result = await this.docClient
+    .get({
+      TableName: this.todosTable,
+      Key: {
+        userId: userId,
+        todoId: todoId
+      },
+    })
+    .promise();
+
+    return result.Item as TodoItem
+  }
 
   async getAllTodos(userId: string): Promise<TodoItem[]> {
     logger.info('Getting all TodoItems for userid', userId)
@@ -44,9 +61,24 @@ export class TodosAccess {
 
   }
 
-  async updateTodo(userId: string, todoUpdateDto: TodoUpdate): Promise<TodoItem> {
-    logger.info(`Update todo item ${todoUpdateDto} for userId ${userId}`)
-    return null
+  async updateTodo(userId: string, todoId: string, updatedTodo: UpdateTodoRequest) {
+    logger.info(`Update todo ${todoId} with new info ${updatedTodo} for userId ${userId}`)
+    var params = {
+          TableName: this.todosTable,
+          Key: {
+            "userId": userId,
+            "todoId": todoId
+          },
+          UpdateExpression: "set name = :nm, dueDate=:ddate, done=:dn",
+          ExpressionAttributeValues:{
+              ":nm":    updatedTodo.name,
+              ":ddate": updatedTodo.dueDate,
+              ":dn":    updatedTodo.done
+          },
+          ReturnValues:"NONE"
+      };
+  
+      await this.docClient.update(params).promise()
   }
 }
 

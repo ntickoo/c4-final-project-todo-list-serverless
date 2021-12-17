@@ -21,9 +21,6 @@ export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGat
 
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
       body: JSON.stringify({
         items: todos
       })
