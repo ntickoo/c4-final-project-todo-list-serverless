@@ -61,7 +61,6 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:Query
-          - dynamodb:GetItem
         Resource: !GetAtt TodosTable.Arn
 
   # TODO: Configure this function - [Done review]

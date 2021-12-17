@@ -8,19 +8,25 @@ import { TodoUpdate } from '../models/TodoUpdate'
 const XAWS = AWSXRay.captureAWS(AWS)
 
 const logger = createLogger('TodosAccess')
-
-// TODO: Implement the dataLayer logic
-
-export class TodoAccess {
+export class TodosAccess {
   constructor(
     private readonly docClient: DocumentClient = createDynamoDBClient(),
-    private readonly todosTable = process.env.TODOS_TABLE
+    private readonly todosTable = process.env.TODOS_TABLE,
   ) {}
 
   async getAllTodos(userId: string): Promise<TodoItem[]> {
     logger.info('Getting all TodoItems for userid', userId)
 
-    return null
+    const result = await this.docClient
+    .query({
+      TableName: this.todosTable,
+      KeyConditionExpression: "userId = :userId",
+      ExpressionAttributeValues: {
+        ":userId": userId,
+      },
+    })
+    .promise();
+    return result.Items as TodoItem[]
   }
 
   async createTodo(todoItem: TodoItem): Promise<TodoItem> {
