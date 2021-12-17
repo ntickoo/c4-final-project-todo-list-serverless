@@ -28,6 +28,7 @@ provider:
     ATTACHMENT_S3_BUCKET: serverless-c4-todo-images-878675217376-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
 
+
   logs:
     # Enable API Gateway logs
     restApi: true
@@ -42,10 +43,12 @@ provider:
           Resource: "*"
 
 functions:
-
+  
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
-
+    environment:
+      AUTH0_JWKS_URL: https://dev-khi6bovt.us.auth0.com/.well-known/jwks.json
+      AUTH0_JWKS_KID: 3qcegU0Kib2MwzDUIoNT_
   # TODO: Configure this function - 
   # Provide iamRoleStatements property for performing Actions on DynamoDB
   GetTodos:

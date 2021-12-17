@@ -12,8 +12,8 @@ const logger = createLogger('auth')
 // TODO: Provide a URL that can be used to download a certificate that can be used
 // to verify JWT token signature.
 // To get this URL you need to go to an Auth0 page -> Show Advanced Settings -> Endpoints -> JSON Web Key Set
-const jwksUrl = 'https://dev-khi6bovt.us.auth0.com/.well-known/jwks.json'
-const kid = '3qcegU0Kib2MwzDUIoNT_'
+const jwksUrl = process.env.AUTH0_JWKS_URL
+const kid     = process.env.AUTH0_JWKS_KID
 
 const client = jwksClient({
   jwksUri: jwksUrl,
