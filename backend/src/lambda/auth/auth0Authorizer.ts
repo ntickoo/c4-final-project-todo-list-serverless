@@ -63,9 +63,6 @@ export const handler = async ( event: CustomAuthorizerEvent): Promise<CustomAuth
 async function verifyToken(authHeader: string): Promise<JwtPayload> {
   logger.info('Verifying token')
   const token = getToken(authHeader)
-  const jwt: Jwt = decode(token, { complete: true }) as Jwt
-  logger.info('Token Decoded Successfully')
-
   const key = await client.getSigningKey(kid);
   const signingKey = key.getPublicKey();
   const payload = verify(token, signingKey, { algorithms: ['RS256'] }) as JwtPayload
