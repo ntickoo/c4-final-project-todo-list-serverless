@@ -31,8 +31,12 @@ export class TodosAccess {
 
   async createTodo(todoItem: TodoItem): Promise<TodoItem> {
     logger.info('Create todo item - ', todoItem)
+    await this.docClient.put({
+      TableName: this.todosTable,
+      Item: todoItem
+    }).promise()
 
-    return null
+    return todoItem
   }
 
   async deleteTodo(userId: string, todoId: TodoItem) {
