@@ -43,9 +43,17 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   onEditButtonClick = (todoId: string) => {
     this.props.history.push(`/todos/${todoId}/edit`)
   }
-
+  isEmptyOrSpaces(str: string) : boolean {
+    return str === null || str.match(/^ *$/) !== null;
+}
   onTodoCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
+      if(this.isEmptyOrSpaces(this.state.newTodoName) || this.state.newTodoName.length < 3)
+      {
+        alert(`Please enter a valid todo text of more than 2 characters.`)
+        return
+      }
+
       const dueDate = this.calculateDueDate()
       const newTodo = await createTodo(this.props.auth.getIdToken(), {
         name: this.state.newTodoName,
@@ -55,6 +63,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
         todos: [...this.state.todos, newTodo],
         newTodoName: ''
       })
+      this.state.newTodoName = ''
     } catch {
       alert('Todo creation failed')
     }
