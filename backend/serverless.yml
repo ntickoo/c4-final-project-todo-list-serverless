@@ -163,6 +163,7 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:Query
+          - dynamodb:GetItem
         Resource: !GetAtt UserInfoTable.Arn
 
   SaveUserInfo:
