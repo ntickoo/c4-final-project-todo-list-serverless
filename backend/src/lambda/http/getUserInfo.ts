@@ -18,13 +18,13 @@ export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGat
     const userId    = getUserId(event)
     const userInfo  = await userInfoService.getUserInfo(userId)
 
-    logger.info(`User Info fetched successfully for userId ${userId}`)
-    
+    const res = {
+      items: userInfo
+    }
+    logger.info(`User Info fetched successfully for userId ${userId}, info ${res}`)
     return {
       statusCode: 200,
-      body: JSON.stringify({
-        items: userInfo
-      })
+      body: JSON.stringify(res)
     }
 })
 handler.use(
