@@ -144,7 +144,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
       }
     }
 
-
+    // Set User Info - email address.
     try {
       const userInfo : UserInfo = await getUserInfo(this.props.auth.getIdToken())
       this.setState({
