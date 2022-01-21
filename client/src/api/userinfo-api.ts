@@ -13,7 +13,10 @@ export async function getUserInfo(idToken: string): Promise<UserInfo> {
     },
   })
   console.log('userinfo:', response.data)
-  return response.data.items
+
+  const userInfo : UserInfo = response.data.items;
+
+  return userInfo
 }
 
 export async function saveUserInfo(
