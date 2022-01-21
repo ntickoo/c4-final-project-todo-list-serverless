@@ -15,8 +15,10 @@ import {
 } from 'semantic-ui-react'
 
 import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
+import { getUserInfo, saveUserInfo } from '../api/userinfo-api'
 import Auth from '../auth/Auth'
 import { Todo } from '../types/Todo'
+import { UserInfo } from '../types/UserInfo'
 
 interface TodosProps {
   auth: Auth
@@ -27,25 +29,54 @@ interface TodosState {
   todos: Todo[]
   newTodoName: string
   loadingTodos: boolean
+  emailAddress: string
 }
 
 export class Todos extends React.PureComponent<TodosProps, TodosState> {
   state: TodosState = {
     todos: [],
     newTodoName: '',
-    loadingTodos: true
+    loadingTodos: true,
+    emailAddress: ''
   }
 
   handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ newTodoName: event.target.value })
   }
 
+  onEmailUpdateButtonClick = async () => {
+    console.log('onEmailUpdateButtonClick', this.state.emailAddress)
+
+    try {
+      if(this.isEmptyOrSpaces(this.state.emailAddress) || this.state.emailAddress.length < 3)
+      {
+        alert(`Please enter a valid email address of more than 2 characters.`)
+        return
+      }
+
+      const newTodo = await saveUserInfo(this.props.auth.getIdToken(), {
+        email: this.state.emailAddress
+      })
+      
+      this.setState({
+        emailAddress: newTodo.email,
+      })
+    } catch {
+      alert('Saving user info failed.')
+    }
+  }
+
+  handleEmailAddressInputChange = (e: any) => {
+    console.log('handleEmailAddressInputChange',e.target.value)
+    this.setState({ emailAddress: e.target.value });
+  };
+
   onEditButtonClick = (todoId: string) => {
     this.props.history.push(`/todos/${todoId}/edit`)
   }
   isEmptyOrSpaces(str: string) : boolean {
     return str === null || str.match(/^ *$/) !== null;
-}
+  }
   onTodoCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
     try {
       if(this.isEmptyOrSpaces(this.state.newTodoName) || this.state.newTodoName.length < 3)
@@ -112,12 +143,52 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
         alert('Unable to  fetch todos')
       }
     }
+
+
+    try {
+      const userInfo : UserInfo = await getUserInfo(this.props.auth.getIdToken())
+      this.setState({
+        emailAddress: userInfo.email
+      })
+    } catch (e) {
+      if(e instanceof Error) {
+        alert(`Failed to fetch user info: ${e.message}`)
+      } else {
+        alert('Unable to  fetch user info')
+      }
+    }
   }
 
   render() {
     return (
       <div>
-        <Header as="h1">TODOs</Header>
+
+        <Grid columns={2} divided>
+          <Grid.Row>
+
+            <Grid.Column>
+              <Header as="h1">TODOs</Header>
+            </Grid.Column>
+            
+            <Grid.Column textAlign="right">
+              <Input 
+                type='text' 
+                placeholder='Email Address...' 
+                action           
+                defaultValue={this.state.emailAddress}
+                onChange={this.handleEmailAddressInputChange}>
+                <input />
+                <Button type='submit' onClick={() => this.onEmailUpdateButtonClick()}>
+                  Update Notification Email Address
+                </Button>
+              </Input>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            
+          </Grid.Row>
+        </Grid>
+
 
         {this.renderCreateTodoInput()}
 
