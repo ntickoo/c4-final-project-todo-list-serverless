@@ -58,26 +58,10 @@ export class UserInfoAccess {
   async saveUserInfo(userInfo: UserInfo) {
     logger.info(`Insert if not exists or Update userInfo ${userInfo}`)
 
-    var params = {
+    await this.docClient.put({
       TableName: this.userInfoTable,
-      Key: {
-        userId: userInfo.userId
-      },
-      UpdateExpression: 'set #userIdAlias = :userId, #emailAlias=:email',
-
-      ExpressionAttributeValues: {
-        ':userId': userInfo.userId,
-        ':email': userInfo.email
-      },
-
-      ExpressionAttributeNames: {
-        '#userIdAlias': 'userId',
-        '#emailAlias': 'email'
-      },
-      ReturnValues: 'NONE'
-    }
-
-    await this.docClient.update(params).promise()
+      Item: userInfo
+    }).promise()
   }
 
   async deleteUserInfo(userId: string) {
