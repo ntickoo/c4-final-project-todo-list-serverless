@@ -19,7 +19,7 @@ export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGat
     const userId    = getUserId(event)
     let userInfo : UserInfo  = await userInfoService.getUserInfo(userId)
 
-    if(Object.keys(userInfo).length === 0 || !('email' in userInfo) ) {
+    if(!Boolean(userInfo) || Object.keys(userInfo).length === 0 || !('email' in userInfo) ) {
       userInfo = {
         userId: userId,
         email: ''
