@@ -24,7 +24,7 @@ provider:
   # ${self:provider.environment.ATTACHMENT_S3_BUCKET}
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
-    USER_INFO_TABLE: UserInfo-${self:provider.stage}
+    USER_INFO_TABLE: UserInformation-${self:provider.stage}
     TODOS_CREATED_AT_INDEX: CreatedAtIndex
     ATTACHMENT_S3_BUCKET: serverless-c4-todo-images-878675217376-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
@@ -164,7 +164,7 @@ functions:
         Action:
           - dynamodb:Query
           - dynamodb:GetItem
-        Resource: !GetAtt UserInfoTable.Arn
+        Resource: !GetAtt UserInformationTable.Arn
 
   SaveUserInfo:
     handler: src/lambda/http/saveUserInfo.handler
@@ -184,7 +184,7 @@ functions:
           - dynamodb:PutItem
           - dynamodb:UpdateItem
           - dynamodb:GetItem
-        Resource: !GetAtt UserInfoTable.Arn
+        Resource: !GetAtt UserInformationTable.Arn
 
 resources:
   Resources:
@@ -228,7 +228,7 @@ resources:
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL # What attributes will be copied to an index
-    UserInfoTable:
+    UserInformationTable:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
