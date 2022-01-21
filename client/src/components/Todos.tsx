@@ -48,9 +48,11 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
     console.log('onEmailUpdateButtonClick', this.state.emailAddress)
 
     try {
-      if(this.isEmptyOrSpaces(this.state.emailAddress) || this.state.emailAddress.length < 3)
+      const regex = /^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/;
+      
+      if(this.isEmptyOrSpaces(this.state.emailAddress) || !regex.test(this.state.emailAddress))
       {
-        alert(`Please enter a valid email address of more than 2 characters.`)
+        alert(`Please enter a valid email address.`)
         return
       }
 
@@ -61,13 +63,14 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
       this.setState({
         emailAddress: newTodo.email,
       })
+      alert('User email saved successfully in the system.');
+
     } catch {
       alert('Saving user info failed.')
     }
   }
 
   handleEmailAddressInputChange = (e: any) => {
-    console.log('handleEmailAddressInputChange',e.target.value)
     this.setState({ emailAddress: e.target.value });
   };
 
