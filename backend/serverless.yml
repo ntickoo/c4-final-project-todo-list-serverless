@@ -54,6 +54,16 @@ functions:
       SMTP_PORT: 2525
       SMTP_USER: 
       SMTP_PASSWORD: 
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: !GetAtt TodosTable.Arn
+      - Effect: Allow
+        Action:
+          - dynamodb:Scan
+        Resource: !GetAtt UserInformationTable.Arn
 
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
