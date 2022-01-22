@@ -1,29 +1,35 @@
-# Serverless TODO
+# Serverless TODO Application with Daily Reminders (Todo Digest emails)
 
-To implement this project, you need to implement a simple TODO application using AWS Lambda and Serverless framework. Search for all comments starting with the `TODO:` in the code to find the placeholders that you need to implement.
-
-# Functionality of the application
-
-This application will allow creating/removing/updating/fetching TODO items. Each TODO item can optionally have an attachment image. Each user only has access to TODO items that he/she has created.
+This project builds on the TODO application which was completed in module 4. On top of the functionalities already implemented and adds below functionalities
+* Allow User to save his email id in the system.
+* Display currently saved email id.
+* Configure a daily scheudled task to send an email about pending todo items and completed todo items.
 
 # TODO items
 
-The application should store TODO items, and each TODO item contains the following fields:
+The application stores TODO items, and each TODO item contains the following fields:
 
-* `todoId` (string) - a unique id for an item
+* `userId` (string) - a unique id for an item
+* `todoId` (string) - a unique id for the user.
 * `createdAt` (string) - date and time when an item was created
 * `name` (string) - name of a TODO item (e.g. "Change a light bulb")
 * `dueDate` (string) - date and time by which an item should be completed
 * `done` (boolean) - true if an item was completed, false otherwise
 * `attachmentUrl` (string) (optional) - a URL pointing to an image attached to a TODO item
 
-You might also store an id of a user who created a TODO item.
+# UserInfo 
+
+The application also allows saving the email of the user in the system.
+
+* `userId` (string) - a unique id for an item
+* `email` (string) - email address of the user.
 
 ## Prerequisites
 
 * <a href="https://manage.auth0.com/" target="_blank">Auth0 account</a>
 * <a href="https://github.com" target="_blank">GitHub account</a>
 * <a href="https://nodejs.org/en/download/package-manager/" target="_blank">NodeJS</a> version up to 12.xx 
+* <a href="https://mailtrap.io/" target="_blank">Mail Trap to get a place to receive all the emails</a> The emails are sent to mailtrap where all the emails can be monitored. You need to set up the config in serverless.yml file to set this up and deploy the serverless instance for yourself. The mailtrap intercepts all emails and is only visible to the requestor. 
 * Serverless 
    * Create a <a href="https://dashboard.serverless.com/" target="_blank">Serverless account</a> user
    * Install the Serverless Framework’s CLI  (up to VERSION=2.21.1). Refer to the <a href="https://www.serverless.com/framework/docs/getting-started/" target="_blank">official documentation</a> for more help.
@@ -40,13 +46,13 @@ You might also store an id of a user who created a TODO item.
    sls config credentials --provider aws --key YOUR_ACCESS_KEY_ID --secret YOUR_SECRET_KEY --profile serverless
    ```
    
-# Functions to be implemented
+# Functions  implemented
 
-To implement this project, you need to implement the following functions and configure them in the `serverless.yml` file:
+Following functions have been implemented and configured in the `serverless.yml` file:
 
-* `Auth` - this function should implement a custom authorizer for API Gateway that should be added to all other functions.
+* `Auth` - this function implements a custom authorizer for API Gateway that should be added to all other functions.
 
-* `GetTodos` - should return all TODOs for a current user. A user id can be extracted from a JWT token that is sent by the frontend
+* `GetTodos` - return all TODOs for a current user. A user id is extracted from a JWT token that is sent by the frontend
 
 It should return data that looks like this:
 
@@ -73,7 +79,7 @@ It should return data that looks like this:
 }
 ```
 
-* `CreateTodo` - should create a new TODO for a current user. A shape of data send by a client application to this function can be found in the `CreateTodoRequest.ts` file
+* `CreateTodo` - creates a new TODO for a current user. A shape of data send by a client application to this function can be found in the `CreateTodoRequest.ts` file
 
 It receives a new TODO item to be created in JSON format that looks like this:
 
@@ -87,7 +93,7 @@ It receives a new TODO item to be created in JSON format that looks like this:
 }
 ```
 
-It should return a new TODO item that looks like this:
+It returns a new TODO item that looks like this:
 
 ```json
 {
@@ -102,7 +108,7 @@ It should return a new TODO item that looks like this:
 }
 ```
 
-* `UpdateTodo` - should update a TODO item created by a current user. A shape of data send by a client application to this function can be found in the `UpdateTodoRequest.ts` file
+* `UpdateTodo` - update a TODO item created by a current user. A shape of data send by a client application to this function can be found in the `UpdateTodoRequest.ts` file
 
 It receives an object that contains three fields that can be updated in a TODO item:
 
@@ -131,6 +137,10 @@ It should return a JSON object that looks like this:
   "uploadUrl": "https://s3-bucket-name.s3.eu-west-2.amazonaws.com/image.png"
 }
 ```
+* `GetUserInfo` - Returns a user id and its corresponding email address..
+
+
+* `SaveUserInfo` - Saves the user id and email address in the system.
 
 All functions are already connected to appropriate events from API Gateway.
 
@@ -138,7 +148,7 @@ An id of a user can be extracted from a JWT token passed by a client.
 
 You also need to add any necessary resources to the `resources` section of the `serverless.yml` file such as DynamoDB table and S3 bucket.
 
-
+* `Email Notifications` - Lambda which contains logic to generate an email notification. The notification is scheduled through a cloudwatch event controlled by cron.
 # Frontend
 
 The `client` folder contains a web application that can use the API that should be developed in the project.
