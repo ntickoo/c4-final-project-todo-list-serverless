@@ -48,7 +48,7 @@ functions:
   EMAILNOTIFICATION:
     handler: src/lambda/email/sendTodoNotification.handler
     events:
-      - schedule: schedule: cron(0 12 * * ? *)
+      - schedule: cron(0 12 * * ? *)
     environment:
       SMTP_HOST: 
       SMTP_PORT: 2525
