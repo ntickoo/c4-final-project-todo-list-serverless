@@ -10,7 +10,7 @@ import { UserInfo } from '../../models/UserInfo'
 
 const logger = createLogger('userInfoLambda')
 
-const todoSerice = new UserInfoService()
+const userInfoService = new UserInfoService()
 
 
 export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -21,7 +21,7 @@ export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGat
   const userId                                = getUserId(event)
   logger.info(`Saving email ${userInfoRequest.email} for userId ${userId}`)
 
-  const userInfo: UserInfo = await todoSerice.save(userId, userInfoRequest)
+  const userInfo: UserInfo = await userInfoService.save(userId, userInfoRequest)
   
   logger.info(`User Info saved successfully for userId ${userId}`)
   return {
